@@ -1,34 +1,32 @@
 /* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-
-@Entity('leads')
-export class Lead {
+@Entity('tasks')
+export class Task {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    clientName: string;
-
-    @Column()
-    phone: string;
-
-    @Column()
-    source: string;
-
-    @Column()
-    status: string;
-
-    @Column()
-    createdByUserId: string;
+    title: string;
 
     @Column({ nullable: true })
-    assignedToUserId: string;
+    dueDate: Date;
+
+    @Column({ default: 'medium' })
+    priority: string;
+
+    @Column({ default: 'pending' })
+    status: string;
+
+    @Column({ nullable: true })
+    leadId: string;
+
+    @Column({ nullable: true })
+    dealId: string;
 
     @Column()
-    notes: string;
+    managerId: string;
 
     @CreateDateColumn()
     createdAt: Date;
-
 }

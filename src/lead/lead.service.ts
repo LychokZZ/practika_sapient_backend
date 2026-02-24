@@ -71,10 +71,9 @@ export class LeadService {
           return { message: 'Status is required' };
         }
         lead.status = status;
-        if(!notes){
-          return { message: 'Notes is required' };
+        if(notes){
+          lead.notes = notes ;
         }
-        lead.notes = notes ;
         await this.leadRepository.save(lead);
         return { message: 'Lead updated successfully' };
       }
@@ -85,6 +84,32 @@ export class LeadService {
     } catch (error) {
       console.log(error);
       return { message: 'Failed to assign lead' };
+    }
+  }
+
+  async getLeadForUser(leadId: string, userId: string) {
+    try {
+      const lead = await this.leadRepository.findOne({ where: { id: leadId, createdByUserId: userId } });
+      if (!lead) return { message: 'Lead not found or unauthorized' };
+      return lead;
+    } catch(err) {
+      console.log(err);
+      return { message: 'Failed to get lead' };
+    }
+  }
+
+  async reassign_lead(leadId: string, assignedToUserId: string) {
+    try {
+      const lead = await this.leadRepository.findOne({ where: { id: leadId } });
+      if (!lead) return { message: 'Lead not found' };
+      
+      lead.assignedToUserId = assignedToUserId;
+      await this.leadRepository.save(lead);
+      
+      return { message: 'Lead reassigned successfully' };
+    } catch(err) {
+      console.log(err);
+      return { message: 'Failed to reassign lead' };
     }
   }
 }

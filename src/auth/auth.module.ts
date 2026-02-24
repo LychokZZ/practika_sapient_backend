@@ -9,7 +9,9 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forRoot({
+      entities: [User],
+    }),
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,

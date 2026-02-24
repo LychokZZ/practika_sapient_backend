@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Request } from '@nestjs/common';
 import { NoteService } from './note.service';
-import { CreateNoteDto } from './dto/create-note.dto';
-import { UpdateNoteDto } from './dto/update-note.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
-@Controller('note')
+@Controller('manager')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
-  @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.noteService.create(createNoteDto);
+  @Roles('manager', 'admin')
+  @Post('leads/:id/notes')
+  createLeadNote(@Param('id') leadId: string, @Body() body: { text: string }, @Request() req) {
+    return this.noteService.create(req.user.userId, body.text, leadId, undefined);
   }
 
-  @Get()
-  findAll() {
-    return this.noteService.findAll();
+  @Roles('manager', 'admin')
+  @Get('leads/:id/notes')
+  getLeadNotes(@Param('id') leadId: string) {
+    return this.noteService.findByLead(leadId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.noteService.findOne(+id);
+  @Roles('manager', 'admin')
+  @Patch('leads/:id/notes/:noteId')
+  updateLeadNote(@Param('noteId') noteId: string, @Body('text') text: string) {
+    return this.noteService.update(noteId, text);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.noteService.update(+id, updateNoteDto);
+  @Roles('manager', 'admin')
+  @Post('deals/:id/notes')
+  createDealNote(@Param('id') dealId: string, @Body() body: { text: string }, @Request() req) {
+    return this.noteService.create(req.user.userId, body.text, undefined, dealId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.noteService.remove(+id);
+  @Roles('manager', 'admin')
+  @Get('deals/:id/notes')
+  getDealNotes(@Param('id') dealId: string) {
+    return this.noteService.findByDeal(dealId);
+  }
+
+  @Roles('manager', 'admin')
+  @Patch('deals/:id/notes/:noteId')
+  updateDealNote(@Param('noteId') noteId: string, @Body('text') text: string) {
+    return this.noteService.update(noteId, text);
   }
 }

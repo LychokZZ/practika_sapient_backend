@@ -21,9 +21,9 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
     
-    async generateTokens(user: { id: string; email: string }) {
+    async generateTokens(user: { id: string; email: string; role: string }) {
         try {
-            const payload: JwtPayload = { sub: user.id, email: user.email };
+            const payload = { sub: user.id, email: user.email, role: user.role };
 
             const [accessToken, refreshToken] = await Promise.all([
                 this.jwtService.signAsync(payload, {
@@ -61,7 +61,7 @@ export class AuthService {
             await this.userRepository.save(user);
 
 
-            const tokens = await this.generateTokens({ id: user.id, email: user.email });
+            const tokens = await this.generateTokens({ id: user.id, email: user.email, role: user.role });
       
             await this.writeRefresh(user.id, tokens.refreshToken);
 
@@ -93,7 +93,7 @@ export class AuthService {
             const isPasswordMatch = await bcrypt.compare(dto.password, user.hashPassword)
             if (!isPasswordMatch) throw new UnauthorizedException('Invalid password');
       
-            const tokens = await this.generateTokens({ id: user.id, email: user.email });
+            const tokens = await this.generateTokens({ id: user.id, email: user.email, role: user.role });
             await this.writeRefresh(user.id, tokens.refreshToken);
 
             const userData = {
@@ -135,7 +135,7 @@ export class AuthService {
         const ok = await bcrypt.compare(refreshToken, user.hashRefreshToken);
         if (!ok) throw new UnauthorizedException('Refresh token mismatch');
 
-        const tokens = await this.generateTokens({ id: user.id, email: user.email });
+        const tokens = await this.generateTokens({ id: user.id, email: user.email, role: user.role });
         await this.writeRefresh(user.id, tokens.refreshToken);
 
         const userData = { fullName: user.fullName, id: user.id, email: user.email };
