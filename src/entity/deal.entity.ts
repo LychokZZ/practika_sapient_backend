@@ -1,34 +1,23 @@
 /* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-
-@Entity('leads')
-export class Lead {
+@Entity('deals')
+export class Deal {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    clientName: string;
+    leadId: string;
 
-    @Column()
-    phone: string;
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    amount: number;
 
-    @Column()
-    source: string;
-
-    @Column()
-    status: string;
-
-    @Column()
-    createdByUserId: string;
+    @Column({ default: 'negotiation' })
+    stage: string;
 
     @Column({ nullable: true })
-    assignedToUserId: string;
-
-    @Column()
-    notes: string;
+    closeDate: Date;
 
     @CreateDateColumn()
     createdAt: Date;
-
 }

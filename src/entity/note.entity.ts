@@ -1,34 +1,23 @@
 /* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-
-@Entity('leads')
-export class Lead {
+@Entity('notes')
+export class Note {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    clientName: string;
+    text: string;
 
     @Column()
-    phone: string;
-
-    @Column()
-    source: string;
-
-    @Column()
-    status: string;
-
-    @Column()
-    createdByUserId: string;
+    authorUserId: string;
 
     @Column({ nullable: true })
-    assignedToUserId: string;
+    leadId: string;
 
-    @Column()
-    notes: string;
+    @Column({ nullable: true })
+    dealId: string;
 
     @CreateDateColumn()
     createdAt: Date;
-
 }
