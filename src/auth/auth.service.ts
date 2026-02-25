@@ -55,7 +55,7 @@ export class AuthService {
                 email: dto.email,
                 hashPassword: hashPassword,
                 isActive: false,
-                role: 'user',
+                role: 'manager',
             });
       
             await this.userRepository.save(user);

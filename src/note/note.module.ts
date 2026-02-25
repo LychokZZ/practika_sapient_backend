@@ -10,4 +10,3 @@ import { Note } from '../entity/note.entity';
   providers: [NoteService],
 })
 export class NoteModule {}
-

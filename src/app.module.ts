@@ -26,6 +26,7 @@ import { Task } from './entity/task.entity';
       autoLoadEntities: true,
       entities: [User, Lead, Deal, Note, Task],
     }),
+    TypeOrmModule.forFeature([User, Lead, Deal]),
     AuthModule,
     LeadModule,
     DealModule,

@@ -30,7 +30,7 @@ export class LeadController {
   @Roles('user', 'manager', 'admin')
   @Get('user_lead/:id')
   async getMyLead(@Param('id') id: string, @Request() req) {
-    return this.leadService.getLeadForUser(id, req.user.userId);
+    return this.leadService.getLeadForUser(id);
   }
 
   @Roles('manager', 'admin')

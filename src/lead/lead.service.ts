@@ -87,9 +87,9 @@ export class LeadService {
     }
   }
 
-  async getLeadForUser(leadId: string, userId: string) {
+  async getLeadForUser(leadId: string,) {
     try {
-      const lead = await this.leadRepository.findOne({ where: { id: leadId, createdByUserId: userId } });
+      const lead = await this.leadRepository.findOne({ where: { id: leadId } });
       if (!lead) return { message: 'Lead not found or unauthorized' };
       return lead;
     } catch(err) {
